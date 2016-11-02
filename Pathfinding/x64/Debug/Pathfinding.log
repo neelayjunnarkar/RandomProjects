@@ -1,0 +1,7 @@
+﻿  main.cpp
+c:\users\neelay junnarkar\documents\visual studio 2015\projects\randomlittleprojects\pathfinding\main.cpp(32): warning C4244: 'argument': conversion from '__int64' to 'unsigned int', possible loss of data
+c:\users\neelay junnarkar\documents\visual studio 2015\projects\randomlittleprojects\pathfinding\main.cpp(38): warning C4244: 'argument': conversion from '__int64' to 'unsigned int', possible loss of data
+c:\users\neelay junnarkar\documents\visual studio 2015\projects\randomlittleprojects\pathfinding\main.cpp(86): warning C4244: 'initializing': conversion from 'double' to 'sf::Uint8', possible loss of data
+c:\users\neelay junnarkar\documents\visual studio 2015\projects\randomlittleprojects\pathfinding\main.cpp(201): warning C4244: 'initializing': conversion from 'const double' to 'int', possible loss of data
+  Pathfinding.vcxproj -> C:\Users\Neelay Junnarkar\documents\visual studio 2015\Projects\RandomLittleProjects\x64\Debug\Pathfinding.exe
+  Pathfinding.vcxproj -> C:\Users\Neelay Junnarkar\documents\visual studio 2015\Projects\RandomLittleProjects\x64\Debug\Pathfinding.pdb (Full PDB)
