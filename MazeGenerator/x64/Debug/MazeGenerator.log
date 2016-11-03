@@ -1,0 +1,5 @@
+﻿  main.cpp
+c:\users\neelay junnarkar\documents\visual studio 2015\projects\randomlittleprojects\mazegenerator\main.cpp(43): warning C4244: 'argument': conversion from '__int64' to 'unsigned int', possible loss of data
+c:\users\neelay junnarkar\documents\visual studio 2015\projects\randomlittleprojects\mazegenerator\main.cpp(70): warning C4244: 'argument': conversion from '__int64' to 'unsigned int', possible loss of data
+  MazeGenerator.vcxproj -> C:\Users\Neelay Junnarkar\Documents\Visual Studio 2015\Projects\RandomLittleProjects\x64\Debug\MazeGenerator.exe
+  MazeGenerator.vcxproj -> C:\Users\Neelay Junnarkar\Documents\Visual Studio 2015\Projects\RandomLittleProjects\x64\Debug\MazeGenerator.pdb (Full PDB)

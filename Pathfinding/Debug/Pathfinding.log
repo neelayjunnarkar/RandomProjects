@@ -1,0 +1,6 @@
+﻿  main.cpp
+c:\users\neelay junnarkar\documents\visual studio 2015\projects\randomlittleprojects\pathfinding\main.cpp(32): warning C4244: 'argument': conversion from '__int64' to 'unsigned int', possible loss of data
+c:\users\neelay junnarkar\documents\visual studio 2015\projects\randomlittleprojects\pathfinding\main.cpp(38): warning C4244: 'argument': conversion from '__int64' to 'unsigned int', possible loss of data
+c:\users\neelay junnarkar\documents\visual studio 2015\projects\randomlittleprojects\pathfinding\main.cpp(86): warning C4244: 'initializing': conversion from 'double' to 'sf::Uint8', possible loss of data
+c:\users\neelay junnarkar\documents\visual studio 2015\projects\randomlittleprojects\pathfinding\main.cpp(201): warning C4244: 'initializing': conversion from 'const double' to 'int', possible loss of data
+sfml-graphics-d.lib(sfml-graphics-d-2.dll) : fatal error LNK1112: module machine type 'x64' conflicts with target machine type 'X86'

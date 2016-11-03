@@ -187,7 +187,7 @@ int main() {
 
 	bool has_found_goal = false;
 	sf::RenderWindow window(sf::VideoMode(SCREEN_X, SCREEN_Y), "Pathfinder");
-
+	window.setFramerateLimit(60);
 	// Main loop
 	while(window.isOpen()) {
 		sf::Event event;
@@ -220,8 +220,6 @@ int main() {
 		window.clear(sf::Color::Black);
 		draw_grid(window, grid);
 		window.display();
-
-		//this_thread::sleep_for(std::chrono::milliseconds{5});
 	}
 
 	return 0;
