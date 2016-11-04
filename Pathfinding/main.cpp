@@ -9,6 +9,7 @@
 #include <chrono>
 #include <queue>
 #include <thread>
+#include <fstream>
 
 using namespace std;
 
@@ -42,12 +43,12 @@ sf::Uint8 random_weight() {
 
 struct Node {
 	enum State {
-		INVALID = 0b00000,
-		UNVISITED = 0b00001,
-		VISITED = 0b00010,
-		START = 0b00100,
-		GOAL = 0b01000,
-		PATH = 0b10000
+		INVALID   = 0b000001,
+		UNVISITED = 0b000010,
+		GOAL      = 0b000100,
+		START     = 0b001000,
+		PATH      = 0b010000,
+		VISITED   = 0b100000
 	} state;
 	Point came_from;
 	sf::Uint8 weight;
@@ -57,12 +58,6 @@ struct Node {
 		came_from{-1, -1},
 		weight{1},
 		len_to{-1} {
-	}
-	Node(State _state, Point _came_from, sf::Uint8 _weight, int _len_to) :
-		state{_state},
-		came_from{_came_from.x, _came_from.y},
-		weight{_weight},
-		len_to{_len_to} {
 	}
 };
 using Grid = array<array<Node, N>, N>;
@@ -76,6 +71,43 @@ void print_grid(const Grid &grid) {
 		cout << endl;
 	}
 }
+}
+
+Grid gen_grid() {
+	Grid grid;
+
+	// Make edges invalid boxes
+	for(int i = 1; i < N; ++i) {
+		grid[i][0].state = Node::State::INVALID;
+		grid[N - i - 1][N - 1].state = Node::State::INVALID;
+		grid[0][N - i - 1].state = Node::State::INVALID;
+		grid[N - 1][i].state = Node::State::INVALID;
+	}
+
+	// Make random invalid 
+	for(int i = 0; i < (N - 2)*(N - 2) / 5; ++i) {
+		Point pos = random_inbounds_pos();
+		grid[pos.x][pos.y].state = Node::INVALID;
+	}
+
+	// random weights
+	for(int y = 1; y < N - 1; ++y) {
+		for(int x = 1; x < N - 1; ++x) {
+			grid[x][y].weight = random_weight();
+		}
+	}
+	return grid;
+}
+
+Grid read_grid(string file_name) {
+	Grid grid;
+
+	ifstream ifs(file_name);
+
+	int X_MAX, Y_MAX;
+	ifs >> X_MAX >> Y_MAX;
+
+	return grid;
 }
 
 void draw_grid(sf::RenderWindow &window, const Grid &grid) {
@@ -149,28 +181,9 @@ bool operator < (pair<Point, double> a, pair<Point, double> b) {
 }
 
 int main() {
-	Grid grid;
+	read_grid("maze.csv");
 
-	// Make edges invalid boxes
-	for(int i = 1; i < N; ++i) {
-		grid[i][0].state = Node::State::INVALID;
-		grid[N - i - 1][N - 1].state = Node::State::INVALID;
-		grid[0][N - i - 1].state = Node::State::INVALID;
-		grid[N - 1][i].state = Node::State::INVALID;
-	}
-
-	// Make random invalid 
-	for(int i = 0; i < (N - 2)*(N - 2) / 5; ++i) {
-		Point pos = random_inbounds_pos();
-		grid[pos.x][pos.y].state = Node::INVALID;
-	}
-
-	// random weights
-	for(int y = 1; y < N - 1; ++y) {
-		for(int x = 1; x < N - 1; ++x) {
-			grid[x][y].weight = random_weight();
-		}
-	}
+	Grid grid = gen_grid();
 
 	Point start = random_inbounds_pos();
 	Point goal;

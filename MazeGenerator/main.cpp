@@ -7,17 +7,23 @@
 #include <random>
 #include <functional>
 #include <algorithm>
+#include <thread>
+#include <fstream>
 
 using namespace std;
 
-enum Cell {
-	WALL  = 0b0001,
-	SPACE = 0b0010,
-	END   = 0b0100,
-	START = 0b1000
+
+struct Cell {
+	enum State {
+		WALL = 0b0001,
+		SPACE = 0b0010,
+		END = 0b0100,
+		START = 0b1000
+	} state;
+	int len_from_start;
 };
 
-constexpr int N = 51;
+constexpr int N = 5;
 constexpr int SCREEN_SIDE = 640;
 constexpr float CELL_SIDE = (float)(SCREEN_SIDE) / (float)(N);
 
@@ -27,11 +33,9 @@ struct Point {
 	int x;
 	int y;
 };
-
 Point operator + (const Point &lhs, const Point &rhs) {
 	return Point{lhs.x + rhs.x, lhs.y + rhs.y};
 }
-
 bool operator == (const Point &lhs, const Point &rhs) {
 	return (lhs.x == rhs.x) && (lhs.y == rhs.y);
 }
@@ -55,13 +59,13 @@ Cell at(const Grid &grid, const Point &pos) {
 
 int n_neighbors(const Grid &grid, const Point &pos) {
 	int n = 0;
-	if(in_bounds(pos + Point{0, -1}) && (at(grid, pos + Point{0, -1}) & SPACE))
+	if(in_bounds(pos + Point{0, -1}) && (at(grid, pos + Point{0, -1}).state & Cell::SPACE))
 		++n;
-	if(in_bounds(pos + Point{-1, 0}) && (at(grid, pos + Point{-1, 0}) & SPACE))
+	if(in_bounds(pos + Point{-1, 0}) && (at(grid, pos + Point{-1, 0}).state & Cell::SPACE))
 		++n;
-	if(in_bounds(pos + Point{0, 1}) && (at(grid, pos + Point{0, 1}) & SPACE))
+	if(in_bounds(pos + Point{0, 1}) && (at(grid, pos + Point{0, 1}).state & Cell::SPACE))
 		++n;
-	if(in_bounds(pos + Point{1, 0}) && (at(grid, pos + Point{1, 0}) & SPACE))
+	if(in_bounds(pos + Point{1, 0}) && (at(grid, pos + Point{1, 0}).state & Cell::SPACE))
 		++n;
 	return n;
 }
@@ -73,7 +77,7 @@ Point next_pos(const Grid &grid, const Point &pos) {
 	shuffle(potential_dpos.begin(), potential_dpos.end(), generator);
 
 	for(const auto &dpos : potential_dpos) {
-		if(in_bounds(pos + dpos) && (at(grid, pos+dpos) & WALL) && n_neighbors(grid, pos + dpos) == 1)
+		if(in_bounds(pos + dpos) && (at(grid, pos+dpos).state & Cell::WALL) && n_neighbors(grid, pos + dpos) == 1)
 			return pos + dpos;
 	}
 	return Point{-1, -1}; //error Point value
@@ -84,28 +88,56 @@ void draw(sf::RenderWindow &window, const Grid &grid) {
 		for(int x = 0; x < N; ++x) {
 			sf::RectangleShape rect{{CELL_SIDE, CELL_SIDE}};
 			rect.setPosition(CELL_SIDE*x, CELL_SIDE*y);
-			if(at(grid, Point{x, y}) & WALL) {
+			if(at(grid, Point{x, y}).state & Cell::WALL) {
 				rect.setFillColor(sf::Color::Black);
 			}
-			if(at(grid, Point{x, y}) & SPACE) {
+			if(at(grid, Point{x, y}).state & Cell::SPACE) {
 				rect.setFillColor(sf::Color::White);
 			}
-			if(at(grid, Point{x, y}) & END) {
-				//rect.setFillColor(sf::Color{0xc4410dFF});
+			if(at(grid, Point{x, y}).state & Cell::END) {
+				rect.setFillColor(sf::Color{0xc4410dFF});
 			}
-			if(at(grid, Point{x, y}) & START) {
-				//rect.setFillColor(sf::Color{0x006400FF});
+			if(at(grid, Point{x, y}).state & Cell::START) {
+				rect.setFillColor(sf::Color{0x006400FF});
 			}
 			window.draw(rect);
 		}
 	}
 }
 
-namespace test {
-void print(const Grid &grid) {
+void export_maze(const Grid &grid, string file_name) {
+	ofstream ofs(file_name);
+	//print dimensions of grid
+	ofs << N << " " << N << endl;
+	
+	//print state of grid
 	for(int y = 0; y < N; ++y) {
 		for(int x = 0; x < N; ++x) {
-			cout << (int)grid[x][y] << " ";
+			if(at(grid, Point{x, y}).state & Cell::END) {
+				ofs << (int)Cell::END << ", ";
+			} else if (at(grid, Point{x, y}).state & Cell::START) {
+				ofs << (int)Cell::START << ", ";
+			} else {
+				ofs << (int)at(grid, Point{x, y}).state << ", ";
+			}
+		}
+		ofs << endl;
+	}
+}
+
+namespace test {
+void print_state(const Grid &grid) {
+	for(int y = 0; y < N; ++y) {
+		for(int x = 0; x < N; ++x) {
+			cout << (int)grid[x][y].state << " ";
+		}
+		cout << endl;
+	}
+}
+void print_len(const Grid &grid) {
+	for(int y = 0; y < N; ++y) {
+		for(int x = 0; x < N; ++x) {
+			cout << (int)grid[x][y].len_from_start << " ";
 		}
 		cout << endl;
 	}
@@ -117,13 +149,11 @@ int main() {
 
 	Grid grid;
 	for(auto &arr : grid) {
-		arr.fill(WALL);
+		arr.fill({Cell::WALL, 0});
 	}
 
 	Point start = random_beginning();
-	grid[start.x][start.y] = (Cell)(START|SPACE);
-
-	Point last_initiate_backtrack{-1, -1}; // the last point at which the stack began popping
+	grid[start.x][start.y].state = (Cell::State)(Cell::START|Cell::SPACE);
 
 	stack<Point> stack;
 	stack.push(start);
@@ -141,18 +171,31 @@ int main() {
 			if(!stack.empty()) {
 				Point next = next_pos(grid, stack.top());
 				if(next == Point{-1, -1}) { //no valid next point -> need to backtrack
-					if (stack.top() != start)
-						last_initiate_backtrack = stack.top();
 					stack.pop();
 				} else {
-					grid[next.x][next.y] = SPACE;
+					grid[next.x][next.y].state = Cell::SPACE;
+					grid[next.x][next.y].len_from_start = at(grid, stack.top()).len_from_start + 1;
 					stack.push(next);
 				}
 			} else {
-				Point end = last_initiate_backtrack;
-				cout << "here" << endl;
-				grid[end.x][end.y] = (Cell)(END | SPACE);
+				Point end{-1, -1};
+
+				// Find cell which is the furthest distance from the start (distance, not displacement)
+				// Not necesarily unique
+				int curr_max_len_found = -1;
+				for(int y = 0; y < N; ++y) {
+					for(int x = 0; x < N; ++x) {
+						if(at(grid, Point{x, y}).len_from_start > curr_max_len_found) {
+							curr_max_len_found = at(grid, Point{x, y}).len_from_start;
+							end = Point{x, y};
+						}
+					}
+				}
+
+				grid[end.x][end.y].state = (Cell::State)(Cell::END | Cell::SPACE);
 				completed_generation = true;
+
+				export_maze(grid, "maze.csv");
 			}
 		}
 
