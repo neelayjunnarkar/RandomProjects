@@ -15,16 +15,16 @@ using namespace std;
 
 struct Cell {
 	enum State {
-		WALL = 0b0001,
+		WALL  = 0b0001,
 		SPACE = 0b0010,
-		END = 0b0100,
+		END   = 0b0100,
 		START = 0b1000
 	} state;
 	int len_from_start;
 };
 
-constexpr int N = 5;
-constexpr int SCREEN_SIDE = 640;
+constexpr int N = 150;
+constexpr int SCREEN_SIDE = 720;
 constexpr float CELL_SIDE = (float)(SCREEN_SIDE) / (float)(N);
 
 using Grid = array<array<Cell, N>, N>;
@@ -114,11 +114,11 @@ void export_maze(const Grid &grid, string file_name) {
 	for(int y = 0; y < N; ++y) {
 		for(int x = 0; x < N; ++x) {
 			if(at(grid, Point{x, y}).state & Cell::END) {
-				ofs << (int)Cell::END << ", ";
+				ofs << (int)Cell::END << " ";
 			} else if (at(grid, Point{x, y}).state & Cell::START) {
-				ofs << (int)Cell::START << ", ";
+				ofs << (int)Cell::START << " ";
 			} else {
-				ofs << (int)at(grid, Point{x, y}).state << ", ";
+				ofs << (int)at(grid, Point{x, y}).state << " ";
 			}
 		}
 		ofs << endl;
@@ -158,8 +158,8 @@ int main() {
 	stack<Point> stack;
 	stack.push(start);
 
-	sf::RenderWindow window(sf::VideoMode(SCREEN_SIDE, SCREEN_SIDE), "My window");
-
+	sf::RenderWindow window(sf::VideoMode(SCREEN_SIDE, SCREEN_SIDE), "Maze Generator");
+	window.setFramerateLimit(48);
 	while(window.isOpen()) {
 		sf::Event event;
 		while(window.pollEvent(event)) {
@@ -195,7 +195,7 @@ int main() {
 				grid[end.x][end.y].state = (Cell::State)(Cell::END | Cell::SPACE);
 				completed_generation = true;
 
-				export_maze(grid, "maze.csv");
+				export_maze(grid, "maze3_150x150.csv");
 			}
 		}
 

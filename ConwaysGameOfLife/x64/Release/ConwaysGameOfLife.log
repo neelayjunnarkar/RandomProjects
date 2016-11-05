@@ -1,8 +1,1 @@
-﻿  main.cpp
-main.cpp(13): warning C4244: 'argument': conversion from '__int64' to 'unsigned int', possible loss of data
-main.cpp(15): warning C4800: 'int': forcing value to bool 'true' or 'false' (performance warning)
-  Generating code
-  All 260 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
-  Finished generating code
-  ConwaysGameOfLife.vcxproj -> c:\users\neelay junnarkar\documents\visual studio 2015\Projects\RandomLittleProjects\x64\Release\ConwaysGameOfLife.exe
-  ConwaysGameOfLife.vcxproj -> c:\users\neelay junnarkar\documents\visual studio 2015\Projects\RandomLittleProjects\x64\Release\ConwaysGameOfLife.pdb (Full PDB)
+﻿
