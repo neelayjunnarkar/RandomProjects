@@ -12,3 +12,6 @@ main: $(OBJ)
 
 clean:
 	rm *.o
+
+run: main
+	./$(TARGET)
