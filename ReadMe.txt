@@ -9,4 +9,5 @@ These are not large projects, and are intended to solely achieve the desired fun
 Currently Contains:
  * Conway's Game of Life
  * Pathfinding Algorithms
- * Maze Generator 
+ * Maze Generator
+ * Big Integer implementation
