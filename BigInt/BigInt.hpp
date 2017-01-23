@@ -10,12 +10,16 @@ public:
 	BigInt(string _n = "0");
 
 	BigInt operator + (BigInt other);
-
 	BigInt operator - (BigInt other);
 
 	BigInt operator - ();
 
 	bool operator > (BigInt other);
+	bool operator <= (BigInt other);
+	bool operator < (BigInt other);
+	bool operator >= (BigInt other);
+	bool operator == (BigInt other);
+	bool operator != (BigInt other);
 
 	string represent() const;
 

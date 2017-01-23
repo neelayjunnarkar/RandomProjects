@@ -111,6 +111,12 @@ BigInt BigInt::_pos_pos_diff(BigInt a, BigInt b) {
 }
 
 bool BigInt::operator > (BigInt other) {
+	if (this->_sign == 1 && other._sign == -1)
+		return true;
+	if (this->_sign == -1 && other._sign == 1)
+		return false;
+	if (this->_sign == -1 && other._sign == -1)
+		return -*this < -other;
 	if (this->_data.size() > other._data.size())
 		return true;
 	if (this->_data.size() < other._data.size())
@@ -122,6 +128,50 @@ bool BigInt::operator > (BigInt other) {
 			return false;
 	}
 	return false; //are equal
+}
+
+bool BigInt::operator <= (BigInt other) {
+	return !(*this > other);
+}
+
+bool BigInt::operator < (BigInt other) {
+	if (this->_sign == -1 && other._sign == 1)
+		return true;
+	if (this->_sign == 1 && other._sign == -1)
+		return false;
+	if (this->_sign == -1 && other._sign == -1)
+		return -*this > -other;
+	if (this->_data.size() < other._data.size())
+		return true;
+	if (this->_data.size() > other._data.size())
+		return false;
+	for (int i = this->_data.size()-1; i >= 0; --i) {
+		if (this->_data[i] < other._data[i])
+			return true;
+		if (this->_data[i] > other._data[i])
+			return false;
+	}
+	return false; //are equal
+}
+
+bool BigInt::operator >= (BigInt other) {
+	return !(*this < other);
+}
+
+bool BigInt::operator == (BigInt other) {
+	if (this->_sign != other._sign)
+		return false;
+	if (this->_data.size() != other._data.size())
+		return false;
+	for (int i = this->_data.size()-1; i >= 0; --i) {
+		if (this->_data[i] != other._data[i])
+			return false;
+	}
+	return true;
+}
+
+bool BigInt::operator != (BigInt other) {
+	return !(*this == other);
 }
 
 string BigInt::represent() const {
