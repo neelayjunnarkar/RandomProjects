@@ -11,6 +11,9 @@ public:
 
 	BigInt operator + (BigInt other);
 	BigInt operator - (BigInt other);
+	BigInt operator * (BigInt other);
+	BigInt operator / (BigInt other);
+	BigInt operator % (BigInt other);
 
 	BigInt operator - ();
 
@@ -30,6 +33,12 @@ private:
 
 	// a must be greater than b
 	static BigInt _pos_pos_diff(BigInt a, BigInt b);
+
+	static BigInt _pos_pos_mult(BigInt a, BigInt b);
+
+	static BigInt _pos_pos_div(BigInt a, BigInt b);
+
+	static BigInt _pos_pos_mod(BigInt a, BigInt b);
 
 	int _sign = 1;
 

@@ -44,6 +44,9 @@ int main(int argc, char **argv) {
 				fns[">="] = [&] () { cout << "a >= b = " << (a >= b) << endl; };
 				fns["=="] = [&] () { cout << "a == b = " << (a == b) << endl; };
 				fns["!="] = [&] () { cout << "a != b = " << (a != b) << endl; };
+				fns["*"]  = [&] () { cout << "a * b = " << (a * b) << endl; };
+				fns["/"] = [&] () { cout << "a / b = " << (a / b) << endl; };
+				fns["%"]  = [&] () { cout << "a % b = " << (a % b) << endl; };
 				fns[args[1]]();
 			}
 			cout << endl;

@@ -1,0 +1,9 @@
+﻿  BigInt.cpp
+c:\users\neelay junnarkar\documents\visual studio 2015\projects\randomprojects\bigint\bigint.cpp(44): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+c:\users\neelay junnarkar\documents\visual studio 2015\projects\randomprojects\bigint\bigint.cpp(130): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+c:\users\neelay junnarkar\documents\visual studio 2015\projects\randomprojects\bigint\bigint.cpp(154): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+c:\users\neelay junnarkar\documents\visual studio 2015\projects\randomprojects\bigint\bigint.cpp(221): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+c:\users\neelay junnarkar\documents\visual studio 2015\projects\randomprojects\bigint\bigint.cpp(245): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+c:\users\neelay junnarkar\documents\visual studio 2015\projects\randomprojects\bigint\bigint.cpp(263): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  bigint.vcxproj -> C:\Users\Neelay Junnarkar\Documents\Visual Studio 2015\Projects\RandomProjects\x64\Debug\bigint.exe
+  bigint.vcxproj -> C:\Users\Neelay Junnarkar\Documents\Visual Studio 2015\Projects\RandomProjects\x64\Debug\bigint.pdb (Full PDB)

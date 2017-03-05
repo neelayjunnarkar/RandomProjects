@@ -7,7 +7,7 @@
 #include <cctype>
 #include <exception>
 
-#define DEBUG(TEST, MESSAGE) if ((TEST)) { throw std::exception(MESSAGE); }
+#define ERROR(TEST, MESSAGE) if ((TEST)) { throw std::exception(MESSAGE); }
 
 bool is_integer(const string &str) {
 	for(const auto &digit : str) {
@@ -23,17 +23,23 @@ BigInt::BigInt(const BigInt &b) :
 }
 
 BigInt::BigInt(string _n) {
-	if(_n == "")
+	if(_n == "") {
+		_data.clear();
+		_sign = 1;
 		return;
+	}
 	if(_n == "0") {
 		_data.push_back(0);
+		_sign = 1;
 		return;
 	}
 	if(_n[0] == '-') {
 		_sign = -1;
 		_n = _n.substr(1, _n.length() - 1);
+	} else {
+		_sign = 1;
 	}
-	DEBUG(!is_integer(_n), "BigInt cstor: Input is neither a blank string nor an integer");
+	ERROR(!is_integer(_n), "ERROR: BigInt cstor: Input is neither a blank string nor an integer");
 
 	int right = _n.length();
 	int left = max(right - max_bucket_digits, 0);
@@ -75,6 +81,42 @@ BigInt BigInt::operator - (BigInt other) {
 	return BigInt();
 }
 
+BigInt BigInt::operator * (BigInt other) {
+	if(this->_sign == 1 && other._sign == 1)
+		return _pos_pos_mult(*this, other);
+	if(this->_sign == -1 && other._sign == 1)
+		return -_pos_pos_mult(-*this, other);
+	if(this->_sign == 1 && other._sign == -1)
+		return -_pos_pos_mult(*this, -other);
+	if(this->_sign == -1 && other._sign == -1)
+		return _pos_pos_mult(-*this, -other);
+	ERROR(true, "ERROR: operator *: somehow bigint sign conditions were not matched");
+}
+
+BigInt BigInt::operator / (BigInt other) {
+	if(this->_sign == 1 && other._sign == 1)
+		return _pos_pos_div(*this, other);
+	if(this->_sign == -1 && other._sign == 1)
+		return -_pos_pos_div(-*this, other);
+	if(this->_sign == 1 && other._sign == -1)
+		return -_pos_pos_div(*this, -other);
+	if(this->_sign == -1 && other._sign == -1)
+		return _pos_pos_div(-*this, -other);
+	ERROR(true, "ERROR: operator /: somehow bigint sign conditions were not matched");
+}
+
+BigInt BigInt::operator % (BigInt other) {
+	if(this->_sign == 1 && other._sign == 1)
+		return _pos_pos_mod(*this, other);
+	if(this->_sign == -1 && other._sign == 1)
+		return -_pos_pos_mod(-*this, other);
+	if(this->_sign == 1 && other._sign == -1)
+		return _pos_pos_mod(*this, -other);
+	if(this->_sign == -1 && other._sign == -1)
+		return -_pos_pos_mod(-*this, -other);
+	ERROR(true, "ERROR: operator /: somehow bigint sign conditions were not matched");
+}
+
 BigInt BigInt::operator - () {
 	BigInt res{*this};
 	res._sign *= -1;
@@ -82,7 +124,7 @@ BigInt BigInt::operator - () {
 }
 
 BigInt BigInt::_pos_pos_sum(BigInt a, BigInt b) {
-	DEBUG(a < BigInt{"0"} || b < BigInt{"0"}, "_pos_pos_sum: either a or b is not greater than zero");
+	ERROR(a < BigInt{"0"} || b < BigInt{"0"}, "ERROR: _pos_pos_sum: either a or b is not greater than zero");
 
 	BigInt res{""};
 	int max_i = max(b._data.size(), a._data.size());
@@ -104,9 +146,10 @@ BigInt BigInt::_pos_pos_sum(BigInt a, BigInt b) {
 	res._data.shrink_to_fit();
 	return res;
 }
+
 BigInt BigInt::_pos_pos_diff(BigInt a, BigInt b) {
-	DEBUG(a < BigInt{"0"} || b < BigInt{"0"}, "_pos_pos_diff: either a or b is not greater than zero");
-	DEBUG(a < b, "_pos_pos_diff: a is not greater than b");
+	ERROR(a < BigInt{"0"} || b < BigInt{"0"}, "ERROR: _pos_pos_diff: either a or b is not greater than zero");
+	ERROR(a < b, "ERROR: _pos_pos_diff: a is not greater than b");
 
 	int max_i = max(a._data.size(), b._data.size()) - 1; //cuz want to deal with end separately
 	for(int i = 0; i < max_i; ++i) {
@@ -131,6 +174,37 @@ BigInt BigInt::_pos_pos_diff(BigInt a, BigInt b) {
 		a._data.pop_back();
 	a._data.shrink_to_fit();
 	return a;
+}
+
+BigInt BigInt::_pos_pos_mult(BigInt a, BigInt b) {
+	ERROR(a < BigInt{"0"} || b < BigInt{"0"}, "ERROR: _pos_pos_mult: either a or b is not greater than zero");
+	BigInt res{"0"};
+	for(BigInt c{"0"}; c < b; c = c + BigInt{"1"}) {
+		res = res + a;
+	}
+	return res;
+}
+
+BigInt BigInt::_pos_pos_div(BigInt a, BigInt b) {
+	ERROR(a < BigInt{"0"} || b < BigInt{"0"}, "ERROR: _pos_pos_div: either a or b is not greater than zero");
+	ERROR(b == BigInt{"0"}, "ERROR: _pos_pos_div: divide by zero");
+	BigInt remainder{a};
+	BigInt quotient{"0"};
+	while(remainder >= b) {
+		remainder = remainder - b;
+		quotient = quotient + BigInt{"1"};
+	}
+	return quotient;
+}
+
+BigInt BigInt::_pos_pos_mod(BigInt a, BigInt b) {
+	ERROR(a < BigInt{"0"} || b < BigInt{"0"}, "ERROR: _pos_pos_mod: either a or b is not greater than zero");
+	ERROR(b == BigInt{"0"}, "ERROR: _pos_pos_mod: mod by zero");
+	BigInt remainder{a};
+	while(remainder >= b) {
+		remainder = remainder - b;
+	}
+	return remainder;
 }
 
 bool BigInt::operator > (BigInt other) {
@@ -208,10 +282,7 @@ string BigInt::to_string() const {
 	reverse(temp.begin(), temp.end());
 	auto num_to_string = [] (int n) -> string {
 		string str = ::to_string(n);
-		string pad = "";
-		for(int i = 0; i < max_bucket_digits - str.length(); ++i)
-			pad += "0";
-		return pad + str;
+		return string(max_bucket_digits - str.length(), '0') + str;
 	};
 	string str = ::to_string(*temp.begin()) + accumulate(temp.begin() + 1, temp.end(), string{}, [&] (string str, int n) { return str + num_to_string(n); });
 	string sign = _sign == 1 ? string{""} : string{"-"};
@@ -221,4 +292,3 @@ string BigInt::to_string() const {
 ostream& operator << (ostream &os, const BigInt &n) {
 	return os << n.to_string();
 }
-
