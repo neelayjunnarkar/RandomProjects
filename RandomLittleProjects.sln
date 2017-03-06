@@ -11,6 +11,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Pathfinding", "Pathfinding\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "bigint", "BigInt\bigint.vcxproj", "{65B6BA6E-6CCB-4352-A8E3-8A738C3BE1C0}"
 EndProject
+Project("{78C9907C-C22D-4F8D-B13A-49F213FF1631}") = "calculator", "calculator\calculator.rsproj", "{42034926-CE67-45B0-B4BB-A4652A5860E0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -51,6 +53,10 @@ Global
 		{65B6BA6E-6CCB-4352-A8E3-8A738C3BE1C0}.Release|x64.Build.0 = Release|x64
 		{65B6BA6E-6CCB-4352-A8E3-8A738C3BE1C0}.Release|x86.ActiveCfg = Release|Win32
 		{65B6BA6E-6CCB-4352-A8E3-8A738C3BE1C0}.Release|x86.Build.0 = Release|Win32
+		{42034926-CE67-45B0-B4BB-A4652A5860E0}.Debug|x64.ActiveCfg = Debug|default
+		{42034926-CE67-45B0-B4BB-A4652A5860E0}.Debug|x86.ActiveCfg = Debug|default
+		{42034926-CE67-45B0-B4BB-A4652A5860E0}.Release|x64.ActiveCfg = Release|default
+		{42034926-CE67-45B0-B4BB-A4652A5860E0}.Release|x86.ActiveCfg = Release|default
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

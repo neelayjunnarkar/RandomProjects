@@ -1,3 +1,5 @@
+// This file is used for testing purposes
+
 extern crate calculator;
 
 use std::io;

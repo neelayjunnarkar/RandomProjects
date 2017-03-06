@@ -1,3 +1,8 @@
+/// Creates a closure of that takes a &regex::Captures and returns an &str.
+/// The closure expects there to be 2 groups in the &regex::Captures,
+/// both of them parsable into i32s.
+/// The closure returns op(a, b) as an &str, where a and b are the i32s.
+/// Used to pass into regex::Regex::replace_all to create the replacement text.
 macro_rules! simplify_op {
 	($op:tt) => (
 		|caps: &regex::Captures| {
@@ -15,6 +20,20 @@ macro_rules! simplify_op {
 extern crate regex;
 use std::num::ParseIntError;
 
+/// Evaluates a piece of text as a postfix notation mathematical expression,
+/// and returns the simplified result
+///
+/// # Errors
+/// If the input is not successfully evaluated (the input is not a valid postfix expression of integers),
+/// returns a ParseIntError
+///
+/// # Examples
+///
+/// ```
+/// let expression = "2 4 -2 / 3 * - 1 +".to_string();
+/// let value = calculator::postfix::eval(&expression);
+/// assert_eq!(value, 9);
+/// ```
 pub fn eval(input: &String) -> Result<i32, ParseIntError> {
 	let sum_re  = regex::Regex::new(r"(-?\d+)\s+(-?\d+)\s*\+").unwrap();
 	let diff_re = regex::Regex::new(r"(-?\d+)\s+(-?\d+)\s*-").unwrap();
