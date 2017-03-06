@@ -1,1 +1,0 @@
-initSidebarItems({"fn":[["eval","Evaluates a piece of text as an infix notation mathematical expression with or without parentheses, and returns the simplified result."]]});
