@@ -35,10 +35,10 @@ use std::num::ParseIntError;
 /// assert_eq!(value, 9);
 /// ```
 pub fn eval(input: &String) -> Result<i32, ParseIntError> {
-	let sum_re  = regex::Regex::new(r"\+\s*(-?\d+)\s+(-?\d+)").unwrap();
-	let diff_re = regex::Regex::new(r"-\s*(-?\d+)\s+(-?\d+)").unwrap();
-	let mult_re = regex::Regex::new(r"\*\s*(-?\d+)\s+(-?\d+)").unwrap();
-	let div_re  = regex::Regex::new(r"/\s*(-?\d+)\s+(-?\d+)").unwrap();
+	let sum_re  = regex::Regex::new(r"\+\s+(-?\d+)\s+(-?\d+)").unwrap();
+	let diff_re = regex::Regex::new(r"-\s+(-?\d+)\s+(-?\d+)").unwrap();
+	let mult_re = regex::Regex::new(r"\*\s+(-?\d+)\s+(-?\d+)").unwrap();
+	let div_re  = regex::Regex::new(r"/\s+(-?\d+)\s+(-?\d+)").unwrap();
 
 	let mut text = input.clone().trim().to_string();
 	let mut simplification_complete = false;

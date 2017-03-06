@@ -32,10 +32,9 @@ A module that can evaluate mathematical expressions that are in prefix, postfix,
     * Factorial (!)
 * In infix notation, support (x)(y) notation for x*y
 * Add tests
+* Add support for decimals
 
 ### Bugs ###
 
 * Fix divide by zero crash
     * Should return error instead
-* Require whitespace before and after operators to fix a negative being registered as a subtraction sign
-    * Affects both prefix and postfix evaluation

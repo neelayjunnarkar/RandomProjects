@@ -9,7 +9,7 @@ macro_rules! simplify_op {
 			if let (Some(a), Some(b)) = (caps.get(1), caps.get(2)) {
 				let a_val = a.as_str().parse::<i32>().unwrap();
 				let b_val = b.as_str().parse::<i32>().unwrap();
-				return format!("{}", a_val $op b_val);
+				return format!(" {} ", a_val $op b_val);
 			}
 			format!("ERROR")
 		}		
@@ -35,12 +35,13 @@ use std::num::ParseIntError;
 /// assert_eq!(value, 9);
 /// ```
 pub fn eval(input: &String) -> Result<i32, ParseIntError> {
-	let sum_re  = regex::Regex::new(r"(-?\d+)\s+(-?\d+)\s*\+").unwrap();
-	let diff_re = regex::Regex::new(r"(-?\d+)\s+(-?\d+)\s*-").unwrap();
-	let mult_re = regex::Regex::new(r"(-?\d+)\s+(-?\d+)\s*\*").unwrap();
-	let div_re  = regex::Regex::new(r"(-?\d+)\s+(-?\d+)\s*/").unwrap();
+	let sum_re  = regex::Regex::new(r"(-?\d+)\s+(-?\d+)\s+\+").unwrap();
+	let diff_re = regex::Regex::new(r"(-?\d+)\s+(-?\d+)\s+-\s+").unwrap();
+	let mult_re = regex::Regex::new(r"(-?\d+)\s+(-?\d+)\s+\*").unwrap();
+	let div_re  = regex::Regex::new(r"(-?\d+)\s+(-?\d+)\s+/").unwrap();
 
 	let mut text = input.clone().trim().to_string();
+	text.push(' ');
 	let mut simplification_complete = false;
 
 	while !simplification_complete {
@@ -53,5 +54,5 @@ pub fn eval(input: &String) -> Result<i32, ParseIntError> {
 			simplification_complete = true;
 		}
 	}
-	text.parse::<i32>()
+	text.trim().parse::<i32>()
 }
