@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["eval","Evaluates a piece of text as a postfix notation mathematical expression, and returns the simplified result"]]});

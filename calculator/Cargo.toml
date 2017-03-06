@@ -5,3 +5,7 @@ authors = ["Neelay Junnarkar <neelay.junnarkar@gmail.com>"]
 
 [dependencies]
 regex = "0.2.1"
+
+[[bin]]
+name = "calculator_test_main"
+doc = false
