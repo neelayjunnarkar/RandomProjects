@@ -87,12 +87,19 @@ fn eval_base_expr(input: &String) -> String {
 /// If the input is not successfully evaluated (the input is not a valid infix expression of integers),
 /// returns a ParseIntError
 ///
+/// Without parentheses:
 /// # Examples
-///
 /// ```
 /// let expression = "1 + 2 - 3 * 4 / -2".to_string();
 /// let result = calculator::infix::eval(&expression);
 /// assert_eq!(result.unwrap(), 9);
+/// ```
+/// With parentheses:
+/// # Examples
+/// ```
+/// let expression = "1 + (2 - 3) * 4 / -2".to_string();
+/// let result = calculator::infix::eval(&expression);
+/// assert_eq!(result.unwrap(), 3);
 /// ```
 pub fn eval(input: &String) -> Result<i32, ParseIntError> {
 	// Regular expression to find expressions surrounded by parentheses
