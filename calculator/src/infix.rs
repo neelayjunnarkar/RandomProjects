@@ -91,8 +91,8 @@ fn eval_base_expr(input: &String) -> String {
 ///
 /// ```
 /// let expression = "1 + 2 - 3 * 4 / -2".to_string();
-/// let value = calculator::infix::eval(&expression);
-/// asert_eq!(value, 9);
+/// let result = calculator::infix::eval(&expression);
+/// assert_eq!(result.unwrap(), 9);
 /// ```
 pub fn eval(input: &String) -> Result<i32, ParseIntError> {
 	// Regular expression to find expressions surrounded by parentheses

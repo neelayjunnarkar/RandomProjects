@@ -31,8 +31,8 @@ use std::num::ParseIntError;
 ///
 /// ```
 /// let expression = "+ 1 - 2 * 3 / 4 -2".to_string();
-/// let value = calculator::prefix::eval(&expression);
-/// assert_eq!(value, 9);
+/// let result = calculator::prefix::eval(&expression);
+/// assert_eq!(result.unwrap(), 9);
 /// ```
 pub fn eval(input: &String) -> Result<i32, ParseIntError> {
 	let sum_re  = regex::Regex::new(r"\+\s+(-?\d+)\s+(-?\d+)").unwrap();
