@@ -1,22 +1,3 @@
-/// Creates a closure of that takes a &regex::Captures and returns an &str.
-/// The closure expects there to be 2 groups in the &regex::Captures,
-/// both of them parsable into i32s.
-/// The closure returns op(a, b) as an &str, where a and b are the i32s.
-/// Used to pass into regex::Regex::replace_all to create the replacement text.
-macro_rules! simplify_op {
-	($op:tt) => (
-		|caps: &regex::Captures| {
-			if let (Some(a), Some(b)) = (caps.get(1), caps.get(2)) {
-				let a_val = a.as_str().parse::<i32>().unwrap();
-				let b_val = b.as_str().parse::<i32>().unwrap();
-				return format!(" {} ", a_val $op b_val);
-			}
-			format!("ERROR")
-		}		
-	)
-}
-
-
 extern crate regex;
 use std::num::ParseIntError;
 
@@ -35,10 +16,7 @@ use std::num::ParseIntError;
 /// assert_eq!(result.unwrap(), 9);
 /// ```
 pub fn eval(input: &String) -> Result<i32, ParseIntError> {
-	let sum_re  = regex::Regex::new(r"(-?\d+)\s+(-?\d+)\s+\+").unwrap();
-	let diff_re = regex::Regex::new(r"(-?\d+)\s+(-?\d+)\s+-\s+").unwrap();
-	let mult_re = regex::Regex::new(r"(-?\d+)\s+(-?\d+)\s+\*").unwrap();
-	let div_re  = regex::Regex::new(r"(-?\d+)\s+(-?\d+)\s+/").unwrap();
+	let general_re = regex::Regex::new(r"(-?\d+)\s+(-?\d+)\s+(\+|-\s+|\*|/)").unwrap();
 
 	let mut text = input.clone().trim().to_string();
 	text.push(' ');
@@ -46,13 +24,28 @@ pub fn eval(input: &String) -> Result<i32, ParseIntError> {
 
 	while !simplification_complete {
 		let text_old = text.clone();
-		text = sum_re.replace_all(text.as_str(),simplify_op!(+)).into_owned();
-		text = diff_re.replace_all(text.as_str(),simplify_op!(-)).into_owned();
-		text = mult_re.replace_all(text.as_str(),simplify_op!(*)).into_owned();
-		text = div_re.replace_all(text.as_str(),simplify_op!(/)).into_owned();
+		text = general_re.replace_all(text.as_str(), |caps: &regex::Captures| {
+			if let (Some(a_m), Some(b_m), Some(op_m)) = (caps.get(1), caps.get(2), caps.get(3)) {
+				let op = op_m.as_str();
+				let a_r = a_m.as_str().parse::<i32>();
+				let b_r = b_m.as_str().parse::<i32>();
+				if let (Ok(a), Ok(b)) = (a_r, b_r) {
+					let res = match op.trim() {
+						"+" => format!("{}", a + b),
+						"-" => format!("{}", a - b),
+						"*" => format!("{}", a * b),
+						"/" => format!("{}", a / b),
+						_   => "Invalid Operation".to_string()
+					};
+					return format!(" {} ", res);
+				}
+			}
+			format!("ERROR")
+		}).into_owned(); // End general regex replace_all
 		if text == text_old {
 			simplification_complete = true;
 		}
+		println!("{}", text);
 	}
 	text.trim().parse::<i32>()
 }
