@@ -1,34 +1,24 @@
-/// Creates a closure of that takes a &regex::Captures and returns an &str.
-/// The closure expects there to be 2 groups in the &regex::Captures,
-/// both of them parsable into i32s.
-/// The closure returns op(a, b) as an &str, where a and b are the i32s
-/// Used to pass into regex::Regex::replace_all to create the replacement text.
-macro_rules! simplify_op {
-	($op:tt) => (
-		|caps: &regex::Captures| {
-			if let (Some(a), Some(b)) = (caps.get(1), caps.get(2)) {
-				let a_val = a.as_str().parse::<i32>().unwrap();
-				let b_val = b.as_str().parse::<i32>().unwrap();
-				return format!("{}", a_val $op b_val);
-			}
-			format!("ERROR")
-		}		
-	)
-}
-
-
 /// A macro that creates a function that,
 /// given a specific operation and an expression without parentheses,
 /// simplifies all instances of that operation.
 macro_rules! eval_base_expr_op {
-	($func:ident, $op:tt, $re:expr) => (
+	($func:ident, $re:expr, $op:expr) => (
 		fn $func(input: &String) -> String {
 			let re = $re;
 			let mut text = input.clone().trim().to_string();
 			let mut simplification_complete = false;
 			while !simplification_complete {
 				let text_old = text.clone();
-				text = re.replace_all(text.as_str(), simplify_op!($op)).into_owned();
+				text = re.replace_all(text.as_str(), |caps: &regex::Captures| {
+					if let (Some(a_m), Some(b_m)) = (caps.get(1), caps.get(2)) {
+						let a_r = a_m.as_str().parse::<i32>();
+						let b_r = b_m.as_str().parse::<i32>();
+						if let (Ok(a), Ok(b)) = (a_r, b_r) {
+							return format!("{}", $op(a, b));
+						}
+					}
+					format!("ERROR")
+				}).into_owned();
 				if text == text_old {
 					simplification_complete = true;
 				}
@@ -42,12 +32,11 @@ extern crate regex;
 use std::num::ParseIntError;
 
 // Creating functions that simplify expressions for the operations mult, div, sum, diff.
-eval_base_expr_op!(eval_base_expr_mult, *, regex::Regex::new(r"(-?\d+)\s*\*\s*(-?\d+)").unwrap());
-eval_base_expr_op!(eval_base_expr_div, /, regex::Regex::new(r"(-?\d+)\s*/\s*(-?\d+)").unwrap());
-eval_base_expr_op!(eval_base_expr_sum, +,  regex::Regex::new(r"(-?\d+)\s*\+\s*(-?\d+)").unwrap());
-eval_base_expr_op!(eval_base_expr_diff, -,  regex::Regex::new(r"(-?\d+)\s*-\s*(-?\d+)").unwrap()); 
-
-
+eval_base_expr_op!(eval_base_expr_exp, regex::Regex::new(r"(-?\d+)\s*\^\s*(\d+)").unwrap(), |a: i32, b: i32| a.pow(b as u32));
+eval_base_expr_op!(eval_base_expr_mult, regex::Regex::new(r"(-?\d+)\s*\*\s*(-?\d+)").unwrap(), |a, b| a * b);
+eval_base_expr_op!(eval_base_expr_div,regex::Regex::new(r"(-?\d+)\s*/\s*(-?\d+)").unwrap(), |a, b| a / b);
+eval_base_expr_op!(eval_base_expr_sum,  regex::Regex::new(r"(-?\d+)\s*\+\s*(-?\d+)").unwrap(), |a, b| a + b);
+eval_base_expr_op!(eval_base_expr_diff,  regex::Regex::new(r"(-?\d+)\s*-\s*(-?\d+)").unwrap(), |a, b| a - b); 
 
 /// Evaluates a piece of text as an infix notation mathematical expression without parentheses,
 /// and returns the simplified result as a String.
@@ -59,19 +48,20 @@ eval_base_expr_op!(eval_base_expr_diff, -,  regex::Regex::new(r"(-?\d+)\s*-\s*(-
 /// the region that caused an error will be replaced with "ERROR".
 fn eval_base_expr(input: &String) -> String {
 	let mut text = input.clone().trim().to_string();
-	let mut simplification_complete = false;
+	let mut simplified = false;
 
-	while !simplification_complete {
+	while !simplified {
 		let text_old = text.clone();
-
+		println!("hi");
 		// By PEMDAS, simplify all instances of mult and div, then sum and diff
+		text = eval_base_expr_exp(&text);
 		text = eval_base_expr_mult(&text);
 		text = eval_base_expr_div(&text);
 		text = eval_base_expr_sum(&text);
 		text = eval_base_expr_diff(&text);
 
 		if text == text_old {
-			simplification_complete = true;
+			simplified = true;
 		}
 	}
 	text
@@ -103,10 +93,10 @@ fn eval_base_expr(input: &String) -> String {
 /// ```
 pub fn eval(input: &String) -> Result<i32, ParseIntError> {
 	// Regular expression to find expressions surrounded by parentheses
-	let parenth_expr = regex::Regex::new(r"\((-?\d+\s*(\+|-|\*|/)\s*-?\d+(\s*(\+|-|\*|/)\s*-?\d+)*)\)").unwrap();
+	let parenth_expr = regex::Regex::new(r"\((-?\d+\s*(\+|-|\*|/|\^)\s*-?\d+(\s*(\+|-|\*|/|\^)\s*-?\d+)*)\)").unwrap();
 
 	// Regular expression to find any expression, not necessarily surrounded by parentheses
-	let nonparenth_expr = regex::Regex::new(r"(-?\d+\s*(\+|-|\*|/)\s*-?\d+(\s*(\+|-|\*|/)\s*-?\d+)*)").unwrap();
+	let nonparenth_expr = regex::Regex::new(r"(-?\d+\s*(\+|-|\*|/|\^)\s*-?\d+(\s*(\+|-|\*|/|\^)\s*-?\d+)*)").unwrap();
 
 	let mut text: String = input.clone().trim().to_string();
 
