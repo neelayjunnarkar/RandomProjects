@@ -72,6 +72,16 @@ mod postfix {
 
 		#[test]
 		fn neg_neg() { assert_eq!(postfix::eval(&"-10 -2 /".to_string()).unwrap(), 5); }
+
+		#[test]
+		fn zero_zero() { assert!(postfix::eval(&"0 0 /".to_string()).is_err()); }
+
+		#[test]
+		fn neg_zero() { assert!(postfix::eval(&"-2 0 /".to_string()).is_err()); }
+
+		#[test]
+		fn pos_zero() { assert!(postfix::eval(&"2 0 /".to_string()).is_err()); }
+		
 	}	
 	#[cfg(test)]
 	mod exp {

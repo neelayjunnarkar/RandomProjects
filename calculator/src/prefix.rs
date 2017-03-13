@@ -33,6 +33,7 @@ pub fn eval(input: &String) -> Result<i32, ParseIntError> {
 									"+" => format!("{}", a + b),
 									"-" => format!("{}", a - b),
 									"*" => format!("{}", a * b),
+									"/" if b == 0 => format!("ERROR_DivByZero"),
 									"/" => format!("{}", a / b),
 									"^" if b >= 0 => format!("{}", a.pow(b as u32)),
 									_ => "Invalid Operation".to_string()

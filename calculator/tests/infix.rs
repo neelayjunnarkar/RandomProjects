@@ -72,6 +72,15 @@ mod infix {
 
 		#[test]
 		fn neg_neg() { assert_eq!(infix::eval(&"-10 / -2".to_string()).unwrap(), 5); }
+
+		#[test]
+		fn zero_zero() { assert!(infix::eval(&"0 / 0".to_string()).is_err()); }
+
+		#[test]
+		fn neg_zero() { assert!(infix::eval(&"-2 / 0".to_string()).is_err()); }
+
+		#[test]
+		fn pos_zero() { assert!(infix::eval(&"2 / 0".to_string()).is_err()); }
 	}	
 	#[cfg(test)]
 	mod exp {

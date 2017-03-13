@@ -34,7 +34,7 @@ use std::num::ParseIntError;
 // Creating functions that simplify expressions for the operations mult, div, sum, diff.
 eval_base_expr_op!(eval_base_expr_exp, regex::Regex::new(r"(-?\d+)\s*\^\s*(\d+)").unwrap(), |a: i32, b: i32| a.pow(b as u32));
 eval_base_expr_op!(eval_base_expr_mult, regex::Regex::new(r"(-?\d+)\s*\*\s*(-?\d+)").unwrap(), |a, b| a * b);
-eval_base_expr_op!(eval_base_expr_div,regex::Regex::new(r"(-?\d+)\s*/\s*(-?\d+)").unwrap(), |a, b| a / b);
+eval_base_expr_op!(eval_base_expr_div,regex::Regex::new(r"(-?\d+)\s*/\s*(-?\d+)").unwrap(), |a, b| if b == 0 { "ERROR_DivByZero".to_string() } else { format!("{}", a / b) } );
 eval_base_expr_op!(eval_base_expr_sum,  regex::Regex::new(r"(-?\d+)\s*\+\s*(-?\d+)").unwrap(), |a, b| a + b);
 eval_base_expr_op!(eval_base_expr_diff,  regex::Regex::new(r"(-?\d+)\s*-\s*(-?\d+)").unwrap(), |a, b| a - b); 
 
@@ -52,14 +52,12 @@ fn eval_base_expr(input: &String) -> String {
 
 	while !simplified {
 		let text_old = text.clone();
-		println!("hi");
 		// By PEMDAS, simplify all instances of mult and div, then sum and diff
 		text = eval_base_expr_exp(&text);
 		text = eval_base_expr_mult(&text);
 		text = eval_base_expr_div(&text);
 		text = eval_base_expr_sum(&text);
 		text = eval_base_expr_diff(&text);
-
 		if text == text_old {
 			simplified = true;
 		}
