@@ -22,6 +22,7 @@ A module that can evaluate mathematical expressions that are in prefix, postfix,
     * Subtraction       (-)
     * Multiplication    (*)
     * Division          (/)
+	* Exponentiation    (^)
 * Supports parentheses
 * Follows PEMDAS
 
@@ -29,7 +30,6 @@ A module that can evaluate mathematical expressions that are in prefix, postfix,
 
 * Add support for more operations
     * Remainder (%)
-    * Fix exponent in infix notation(^)
     * Factorial (!)
 * In infix notation, support (x)(y) notation for x*y
 * Add tests
@@ -37,5 +37,4 @@ A module that can evaluate mathematical expressions that are in prefix, postfix,
 
 ### Bugs ###
 
-* Fix divide by zero crash
-    * Should return error instead
+* Fix order of simplifying exponentation in infix notation
