@@ -83,6 +83,23 @@ mod prefix {
 		fn pos_zero() { assert!(prefix::eval(&"/ 2 0".to_string()).is_err()); }
 	}	
 	#[cfg(test)]
+	mod modulo {
+		use calculator::prefix;
+
+		#[test]
+		fn posless_posgreater() { assert_eq!(prefix::eval(&"% 1 2".to_string()).unwrap(), 1); }
+
+		#[test]
+		fn posgreater_posless() { assert_eq!(prefix::eval(&"% 11 2".to_string()).unwrap(), 1); }
+
+		#[test]
+		fn divisible_posless_posgreater() { assert_eq!(prefix::eval(&"% 0 2".to_string()).unwrap(), 0); }
+
+		#[test]
+		fn divisible_posgreater_posless() { assert_eq!(prefix::eval(&"% 10 2".to_string()).unwrap(), 0); }
+	}
+
+	#[cfg(test)]
 	mod exp {
 		use calculator::prefix;
 

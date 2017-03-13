@@ -83,6 +83,25 @@ mod postfix {
 		fn pos_zero() { assert!(postfix::eval(&"2 0 /".to_string()).is_err()); }
 		
 	}	
+	
+	#[cfg(test)]
+	mod modulo {
+		use calculator::postfix;
+
+		#[test]
+		fn posless_posgreater() { assert_eq!(postfix::eval(&"1 2 %".to_string()).unwrap(), 1); }
+
+		#[test]
+		fn posgreater_posless() { assert_eq!(postfix::eval(&"11 2 %".to_string()).unwrap(), 1); }
+
+		#[test]
+		fn divisible_posless_posgreater() { assert_eq!(postfix::eval(&"0 2 %".to_string()).unwrap(), 0); }
+
+		#[test]
+		fn divisible_posgreater_posless() { assert_eq!(postfix::eval(&"10 2 %".to_string()).unwrap(), 0); }
+	}	
+
+
 	#[cfg(test)]
 	mod exp {
 		use calculator::postfix;

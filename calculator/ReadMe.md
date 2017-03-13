@@ -3,7 +3,8 @@
 
 by Neelay Junnarkar
 
-A module that can evaluate mathematical expressions that are in prefix, postfix, or infix notation.
+A module that can evaluate mathematical expressions of integers that are in prefix, postfix, or infix notation.
+Implemented using regex because I wanted to learn regex.
 
 ### Prefix and Postfix Notation ###
 
@@ -13,6 +14,7 @@ A module that can evaluate mathematical expressions that are in prefix, postfix,
     * Multiplication    (*)
     * Division          (/)
 	* Exponentiation    (^)
+	* Modulo            (%)
 * Do not support parentheses
 
 ### Infix Notation ###

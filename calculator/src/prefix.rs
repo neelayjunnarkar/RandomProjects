@@ -16,7 +16,7 @@ use std::num::ParseIntError;
 /// assert_eq!(result.unwrap(), 9);
 /// ```
 pub fn eval(input: &String) -> Result<i32, ParseIntError> {
-	let general_re  = regex::Regex::new(r"(\+|-|\*|/|\^)\s+(-?\d+)\s+(-?\d+)").unwrap();
+	let general_re  = regex::Regex::new(r"(\+|-|\*|/|\^|%)\s+(-?\d+)\s+(-?\d+)").unwrap();
 
 	let mut text = input.clone().trim().to_string();
 	let mut simplification_complete = false;
@@ -36,6 +36,8 @@ pub fn eval(input: &String) -> Result<i32, ParseIntError> {
 									"/" if b == 0 => format!("ERROR_DivByZero"),
 									"/" => format!("{}", a / b),
 									"^" if b >= 0 => format!("{}", a.pow(b as u32)),
+									"%" if b == 0 => format!("ERROR_ModByZero"),
+									"%" => format!("{}", a % b),
 									_ => "Invalid Operation".to_string()
 								};
 								return format!("{}", res);
