@@ -159,7 +159,7 @@ int main() {
 	stack.push(start);
 
 	sf::RenderWindow window(sf::VideoMode(SCREEN_SIDE, SCREEN_SIDE), "Maze Generator");
-	window.setFramerateLimit(48);
+	window.setFramerateLimit(120);
 	while(window.isOpen()) {
 		sf::Event event;
 		while(window.pollEvent(event)) {
