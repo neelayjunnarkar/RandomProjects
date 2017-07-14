@@ -1,1 +1,0 @@
-{"rustc":17615268967769245645,"target":4576572551216832738,"profile":5067894660064400173,"local":{"variant":"Precalculated","fields":["1488765166.261768800s (/home/NEELAY/workspace/RandomProjects/calculator/Cargo.toml)"]},"features":"None","deps":[["regex v0.2.1",11046477229210628195],["regex v0.2.1",15405764130519625906]],"rustflags":[]}
