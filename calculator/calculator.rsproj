@@ -30,6 +30,7 @@
   </ItemGroup>
   <ItemGroup>
     <File Include="ReadMe.md" />
+    <File Include="src\main.rs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\VisualRust\VisualRust.Rust.targets" />
 </Project>
